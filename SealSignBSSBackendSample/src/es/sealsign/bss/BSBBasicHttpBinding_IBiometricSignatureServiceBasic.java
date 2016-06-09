@@ -37,10 +37,12 @@ public class BSBBasicHttpBinding_IBiometricSignatureServiceBasic
         java.lang.Object ProcessResult(BSBExtendedSoapSerializationEnvelope __envelope,java.lang.Object result) throws java.lang.Exception;
     }
 
-    String url="https://master.sealsignonline.com/SealSignBSSService/BiometricSignatureServiceBasic.svc";
+    String url = "http://localhost/SealSignBSSService/BiometricSignatureServiceBasic.svc/BB"; // Default
+    String userName = "domain\\user";
+    String password = "password";
 
     int timeOut=60000;
-    public List< HeaderProperty> httpHeaders;
+    public List<HeaderProperty> httpHeaders = new ArrayList<HeaderProperty>();
     public boolean enableLogging;
 
     BSBIServiceEvents callback;
@@ -49,11 +51,13 @@ public class BSBBasicHttpBinding_IBiometricSignatureServiceBasic
     public BSBBasicHttpBinding_IBiometricSignatureServiceBasic (BSBIServiceEvents callback)
     {
         this.callback = callback;
+        addBasicHeader();
     }
     public BSBBasicHttpBinding_IBiometricSignatureServiceBasic(BSBIServiceEvents callback,String url)
     {
         this.callback = callback;
         this.url = url;
+        addBasicHeader();
     }
 
     public BSBBasicHttpBinding_IBiometricSignatureServiceBasic(BSBIServiceEvents callback,String url,int timeOut)
@@ -61,8 +65,14 @@ public class BSBBasicHttpBinding_IBiometricSignatureServiceBasic
         this.callback = callback;
         this.url = url;
         this.timeOut=timeOut;
+        addBasicHeader();
     }
-
+    
+    private void addBasicHeader(){
+        httpHeaders.add(new HeaderProperty("Authorization", "Basic " +      
+        		org.kobjects.base64.Base64.encode((userName+ ":" + password).getBytes())));
+    }
+    
     protected org.ksoap2.transport.Transport createTransport()
     {
         try
